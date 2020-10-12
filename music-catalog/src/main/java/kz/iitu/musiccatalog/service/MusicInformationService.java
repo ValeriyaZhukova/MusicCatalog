@@ -1,67 +1,54 @@
 package kz.iitu.musiccatalog.service;
 
-import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
-import com.netflix.hystrix.contrib.javanica.annotation.HystrixProperty;
 import kz.iitu.musiccatalog.model.Song;
-import org.apache.commons.codec.binary.Base64;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 @Service
+@Component
 public class MusicInformationService {
 
     @Autowired
     RestTemplate restTemplate;
 
-    @HystrixCommand(
-        threadPoolKey = "getAllSongs",
-        threadPoolProperties = {
-                @HystrixProperty(name="coreSize", value="100"),
-                @HystrixProperty(name="maximumSize", value="120"),
-                @HystrixProperty(name="maxQueueSize", value="50"),
-                @HystrixProperty(name="allowMaximumSizeToDivergeFromCoreSize", value="true"),
-        }
-    )
-    public Song getSongs()
+    public Song getSongByID(Long songID)
     {
-        String apiCredentials = "rest-client:p@ssword";
-        String base64Credentials = new String(Base64.encodeBase64(apiCredentials.getBytes()));
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("Authorization", "Basic " + base64Credentials);
-        HttpEntity<Song> entity = new HttpEntity<>(headers);
-
-        return restTemplate.exchange("http://music-information-service/songs",
-                HttpMethod.GET, entity, Song.class).getBody();
+        Song song = restTemplate.getForObject("http://music-information-service/songs/"+songID, Song.class);
+        return song;
     }
 
-    @HystrixCommand(
-            threadPoolKey = "getSongById",
-            threadPoolProperties = {
-                    @HystrixProperty(name="coreSize", value="100"),
-                    @HystrixProperty(name="maximumSize", value="120"),
-                    @HystrixProperty(name="maxQueueSize", value="50"),
-                    @HystrixProperty(name="allowMaximumSizeToDivergeFromCoreSize", value="true"),
-            }
-    )
-    public Song getSongById(Long songId)
+    public List<Song> getSongs()
     {
-        String apiCredentials = "rest-client:p@ssword";
-        String base64Credentials = new String(Base64.encodeBase64(apiCredentials.getBytes()));
+        ResponseEntity<List<Song>> response = restTemplate.exchange(
+                "http://music-information-service/songs",
+                HttpMethod.GET,
+                null,
+                new ParameterizedTypeReference<List<Song>>(){});
 
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("Authorization", "Basic " + base64Credentials);
-        HttpEntity<String> entity = new HttpEntity<>(headers);
-
-        return restTemplate.exchange("http://music-information-service/songs/" + songId,
-                HttpMethod.GET, entity, Song.class).getBody();
+        List<Song> songs = response.getBody();
+        return songs;
     }
+
+    public List<Song> getSongsByAlbumID(Long album_id)
+    {
+        ResponseEntity<List<Song>> response = restTemplate.exchange(
+                "http://music-information-service/songs/findByAlbumID/"+album_id,
+                HttpMethod.GET,
+                null,
+                new ParameterizedTypeReference<List<Song>>(){});
+
+        List<Song> songs = response.getBody();
+        return songs;
+    }
+
+
+
+
 }

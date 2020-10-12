@@ -16,10 +16,7 @@ public class MusicCatalogApplication {
     @Bean
     @LoadBalanced
     public RestTemplate getRestTemplate() {
-        HttpComponentsClientHttpRequestFactory requestFactory = new HttpComponentsClientHttpRequestFactory();
-        requestFactory.setConnectTimeout(3000);
-
-        return new RestTemplate(requestFactory);
+        return new RestTemplate();
     }
 
     public static void main(String[] args) {

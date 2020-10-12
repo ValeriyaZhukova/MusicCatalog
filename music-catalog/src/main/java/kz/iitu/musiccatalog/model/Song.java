@@ -1,6 +1,10 @@
 package kz.iitu.musiccatalog.model;
 
-import lombok.*;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
+
 import javax.persistence.*;
 import java.util.List;
 
@@ -16,14 +20,21 @@ public class Song {
     @NonNull
     private String title;
     @NonNull
-    private String performer;
-    @NonNull
-    private String album;
-    @NonNull
-    private String release_year;
+    private String length;
 
+    @OneToOne(mappedBy = "song", cascade = CascadeType.ALL)
+    private Lyrics lyrics;
+
+    @NonNull
     @ManyToOne
-    @JoinColumn(name="playlist_id", nullable=false)
-    private MainPlaylist playlist;
+    @JoinColumn(name="album_id", nullable=false)
+    private Album album;
+
+    @ManyToMany
+    @JoinTable(
+            name = "songs_artists",
+            joinColumns = @JoinColumn(name = "song_id"),
+            inverseJoinColumns = @JoinColumn(name = "artist_id"))
+    List<Artist> artists;
 
 }
