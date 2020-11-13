@@ -1,4 +1,4 @@
-package kz.iitu.authservice.config;
+package kz.iitu.zuulserver.security;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
