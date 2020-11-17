@@ -19,7 +19,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter
             .httpBasic();
     }
 
-   /* @Autowired
+    @Autowired
     public void configureGlobal(AuthenticationManagerBuilder auth)
             throws Exception
     {
@@ -27,5 +27,5 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter
                 .withUser("rest-client")
                 .password("{noop}p@ssword")
                 .roles("REST_CLIENT");
-    }*/
+    }
 }
