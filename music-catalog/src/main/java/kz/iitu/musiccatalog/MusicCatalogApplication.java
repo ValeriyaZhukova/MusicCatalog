@@ -32,7 +32,7 @@ public class MusicCatalogApplication {
 		CredentialsProvider credentialsProvider = new BasicCredentialsProvider();
 
 		credentialsProvider.setCredentials(AuthScope.ANY,
-				new UsernamePasswordCredentials("rest-client", "p@ssword"));
+				new UsernamePasswordCredentials("rest-client", "{noop}p@ssword"));
 
 		HttpClient client = HttpClientBuilder
 				.create()

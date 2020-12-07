@@ -29,8 +29,6 @@ public class JwtTokenGeneratorFilter extends UsernamePasswordAuthenticationFilte
 
     public JwtTokenGeneratorFilter(AuthenticationManager authManager) {
         this.authManager = authManager;
-
-        // By default, UsernamePasswordAuthenticationFilter listens to "/login" path.
         this.setRequiresAuthenticationRequestMatcher(new AntPathRequestMatcher("/users/login", "POST"));
     }
 
@@ -38,17 +36,12 @@ public class JwtTokenGeneratorFilter extends UsernamePasswordAuthenticationFilte
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response)
             throws AuthenticationException {
-
         try {
-
-            // 1. Get credentials from request
             User creds = new ObjectMapper().readValue(request.getInputStream(), User.class);
             System.out.println(request);
-            // 2. Create auth object (contains credentials) which will be used by auth manager
             UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
                     creds.getUsername(), creds.getPassword(), Collections.emptyList());
             System.out.println("creds: " + creds);
-            // 3. Authentication manager authenticate the user, and use UserDetialsServiceImpl::loadUserByUsername() method to load the user.
             return authManager.authenticate(authToken);
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -58,26 +51,18 @@ public class JwtTokenGeneratorFilter extends UsernamePasswordAuthenticationFilte
             throw new Exception(x);
         }
     }
-
-    // Upon successful authentication, generate a token.
-    // The 'auth' passed to successfulAuthentication() is the current authenticated user.
     @Override
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain,
                                             Authentication auth) throws IOException, ServletException {
-
         Long now = System.currentTimeMillis();
         String token = Jwts.builder()
                 .setSubject(auth.getName())
-                // Convert to list of strings.
-                // This is important because it affects the way we get them back in the Gateway.
                 .claim("authorities", auth.getAuthorities().stream()
                         .map(GrantedAuthority::getAuthority).collect(Collectors.toList()))
                 .setIssuedAt(new Date(now))
                 .setExpiration(new Date(now + 60*60 * 1000))  // in milliseconds
                 .signWith(SignatureAlgorithm.HS512, "secret-key".getBytes())
                 .compact();
-
-        // Add token to header
         response.addHeader("Authorization", "Bearer " + token);
         response.getHeader(token);
         System.out.println(token);

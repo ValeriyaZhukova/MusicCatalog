@@ -1,6 +1,7 @@
 package kz.iitu.musicinformationservice.model;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
 import javax.persistence.*;
 import java.util.List;
@@ -9,6 +10,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @NoArgsConstructor
 @Entity
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "requests", "songs"})
 public class Album {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

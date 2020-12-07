@@ -1,6 +1,7 @@
 package kz.iitu.musiccatalog.controller;
 
 import kz.iitu.musiccatalog.model.Song;
+import kz.iitu.musiccatalog.model.SongList;
 import kz.iitu.musiccatalog.model.User;
 import kz.iitu.musiccatalog.service.MusicInformationService;
 import kz.iitu.musiccatalog.service.UserService;
@@ -8,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -29,15 +31,16 @@ public class MusicCatalogController {
     @GetMapping("/songs/{songId}")
     public Song getSongById(@PathVariable Long songId)
     {
-        Song song = musicInformationService.getSongByID(songId);
-        return song;
+        return musicInformationService.getSongByID(songId);
     }
 
 
     @GetMapping("/songs")
     public ResponseEntity<?> getSongs()
     {
-        List<Song> songs = musicInformationService.getSongs();
+        SongList songList = musicInformationService.getSongs();
+
+        List<Song> songs = new ArrayList<>(songList.getSongList());
         return ResponseEntity.ok(songs);
     }
 

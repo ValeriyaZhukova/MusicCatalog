@@ -4,10 +4,14 @@ import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixProperty;
 import kz.iitu.musiccatalog.model.Album;
 import kz.iitu.musiccatalog.model.Song;
+import kz.iitu.musiccatalog.model.SongList;
+import org.apache.commons.codec.binary.Base64;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.netflix.hystrix.EnableHystrix;
 import org.springframework.cloud.netflix.hystrix.dashboard.EnableHystrixDashboard;
 import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
@@ -36,8 +40,15 @@ public class MusicInformationService {
     )
     public Song getSongByID(Long songID)
     {
-        Song song = restTemplate.getForObject("http://music-information-service/songs/"+songID, Song.class);
-        return song;
+        String apiCredentials = "rest-client:p@ssword";
+        String base64Credentials = new String(Base64.encodeBase64(apiCredentials.getBytes()));
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Authorization", "Basic " + base64Credentials);
+        HttpEntity<String> entity = new HttpEntity<>(headers);
+
+        return restTemplate.exchange("http://music-information-service/songs/" + songID,
+                HttpMethod.GET, entity, Song.class).getBody();
     }
 
     public Song getSongsByIDFallback(Long songID)
@@ -53,16 +64,39 @@ public class MusicInformationService {
                 @HystrixProperty(name = "maxQueueSize", value = "50"),
         }
     )
-    public List<Song> getSongs()
+    public SongList getSongs()
     {
-        ResponseEntity<List<Song>> response = restTemplate.exchange(
-                "http://music-information-service/songs",
+        String apiCredentials = "rest-client:p@ssword";
+        String base64Credentials = new String(Base64.encodeBase64(apiCredentials.getBytes()));
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Authorization", "Basic " + base64Credentials);
+        HttpEntity<String> entity = new HttpEntity<>(headers);
+
+        return restTemplate.exchange("http://music-information-service/songs",
+                HttpMethod.GET, entity, SongList.class).getBody();
+
+        /*return restTemplate.exchange("http://music-information-service/songs/",
+                HttpMethod.GET, entity, Song.class).getBody();*/
+
+        /*ResponseEntity<List<Song>> response = restTemplate.exchange(
+                "http://localhost:8081/api/catalog/songs",
                 HttpMethod.GET,
                 null,
                 new ParameterizedTypeReference<List<Song>>(){});
 
         List<Song> songs = response.getBody();
-        return songs;
+        return songs;*/
+    }
+
+    public SongList getSongsFallback()
+    {
+        Album album = new Album();
+        SongList songList = new SongList();
+        List<Song> songs = new ArrayList<>();
+        songs.add(new Song(0L, "", "", album));
+        songList.setSongList(songs);
+        return songList;
     }
 
     public List<Song> getSongsByAlbumID(Long album_id)
@@ -77,11 +111,7 @@ public class MusicInformationService {
         return songs;
     }
 
-    public List<Song> getSongsFallback()
-    {
-        List<Song> songs = new ArrayList<>();
-        return songs;
-    }
+
 
 
 }

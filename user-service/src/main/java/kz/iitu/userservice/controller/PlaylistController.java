@@ -17,4 +17,8 @@ public class PlaylistController {
     {
         return playlistRepository.findByUserId(id);
     }
+
+    /*@PostMapping("/addSong")
+    public void addSongToPlaylist(@RequestParam(""))
+*/
 }

@@ -20,18 +20,13 @@ public class JwtTokenAuthenticationFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
             throws ServletException, IOException {
-        // 1. get the authentication header. Tokens are supposed to be passed in the authentication header
         String header = request.getHeader("Authorization");
-        // 2. validate the header and check the prefix
         if(header == null || !header.startsWith("Bearer ")) {
-            chain.doFilter(request, response);  		// If not valid, go to the next filter.
+            chain.doFilter(request, response);
             return;
         }
-        // 3. Get the token
         String token = header.replace("Bearer ", "");
-        // exceptions might be thrown in creating the claims if for example the token is expired
         try {
-            // 4. Validate the token
             Claims claims = Jwts.parser()
                     .setSigningKey("secret-key".getBytes())
                     .parseClaimsJws(token)
@@ -44,17 +39,13 @@ public class JwtTokenAuthenticationFilter extends OncePerRequestFilter {
 
                 System.out.println("authorities = " + authorities);
 
-                // 5. Create auth object
                 UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(
                         username, null, authorities.stream().map(SimpleGrantedAuthority::new).collect(Collectors.toList()));
-                // 6. Authenticate the user
                 SecurityContextHolder.getContext().setAuthentication(auth);
             }
         } catch (Exception e) {
-            // In case of failure. Make sure it's clear; so guarantee user won't be authenticated
             SecurityContextHolder.clearContext();
         }
-        // go to the next filter in the filter chain
         chain.doFilter(request, response);
     }
 }
