@@ -27,7 +27,7 @@ public class Playlist {
     @JoinColumn(name="user_id", nullable=false)
     private User user;
 
-    /*@ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     @JoinTable(name = "songs_playlists",
             joinColumns = {
                     @JoinColumn(name = "playlist_id", referencedColumnName = "id",
@@ -35,7 +35,7 @@ public class Playlist {
             inverseJoinColumns = {
                     @JoinColumn(name = "song_id", referencedColumnName = "id",
                             nullable = false, updatable = false)})
-    private List<Song> songList = new ArrayList<>();*/
+    private List<Song> songList = new ArrayList<>();
 
 
 }

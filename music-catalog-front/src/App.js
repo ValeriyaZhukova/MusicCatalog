@@ -5,6 +5,8 @@ import { BrowserRouter as Router, Route } from "react-router-dom";
 import Header from "./components/header";
 import SongList from "./components/song-list";
 import SongDetails from "./containers/song-details";
+import AlbumList from "./components/album-list";
+import AlbumDetails from "./containers/album-details";
 
 function App() {
   return (
@@ -12,6 +14,7 @@ function App() {
           <Router>
             <Header/>
             <Route path="/" exact component={SongList}/>
+            <Route path="/albums" exact component={AlbumList}/>
             <Route path="/songs/:id" exact component={SongDetails}/>
           </Router>
         </div>

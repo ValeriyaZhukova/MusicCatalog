@@ -11,6 +11,7 @@
     <groupId>kz.iitu</groupId>
     <artifactId>recommendation-service</artifactId>
     <version>0.0.1-SNAPSHOT</version>
+    <packaging>jar</packaging>
     <name>recommendation-service</name>
     <description>Demo project for Spring Boot</description>
 

@@ -12,9 +12,8 @@ import java.util.List;
 @Service
 public class RecommendationService {
 
-    @Autowired
     Recommendation recommendation;
-    //the real implementation of song recommendations will be based on user playlists data from database
+
     public Recommendation getRecommendedSongs()
     {
         Song song1 = new Song(1L, "Heat-shaped box", "Nevermind", "Nirvana");

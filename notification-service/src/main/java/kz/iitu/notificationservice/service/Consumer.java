@@ -9,7 +9,7 @@ import java.io.IOException;
 @Service
 public class Consumer {
 
-    @KafkaListener(topics = "book_requests", groupId = "group_id")
+    @KafkaListener(topics = "recommendation", groupId = "group_id")
     public void consume(Recommendation recommendation) throws IOException {
         System.out.println(String.format("#### -> Notify user: -> %s",
                 "User " + recommendation.getUser().getId() + " have received "

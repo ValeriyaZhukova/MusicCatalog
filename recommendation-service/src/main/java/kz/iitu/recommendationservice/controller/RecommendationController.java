@@ -25,7 +25,7 @@ public class RecommendationController {
     @GetMapping
     public String sendMessageToKafkaTopic()
     {
-        Recommendation recommendation = new Recommendation();
+        Recommendation recommendation = recommendationService.getRecommendedSongs();
         this.producer.newRecommendationAddedNotification(recommendation);
         return "You have received new song recommendations!";
     }

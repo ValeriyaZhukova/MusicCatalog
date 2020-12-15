@@ -38,7 +38,7 @@ public class Song {
             inverseJoinColumns = @JoinColumn(name = "artist_id"))
     List<Artist> artists;
 
-    /*@ManyToMany(mappedBy = "songs", fetch = FetchType.LAZY)
-    List<Playlist> playlists;*/
+    @ManyToMany(mappedBy = "songList", fetch = FetchType.LAZY)
+    List<Playlist> playlists;
 
 }

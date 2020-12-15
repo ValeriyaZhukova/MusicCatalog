@@ -38,6 +38,12 @@ public class SongController {
         return songService.getSongsByAlbum(album_name);
     }
 
+    @GetMapping("/album/{albumID}")
+    public List<Song> getSongsByAlbumID(@PathVariable("albumID") Long albumID)
+    {
+        return songService.getSongsByAlbumID(albumID);
+    }
+
     @PostMapping("")
     public Song addSong(@RequestBody Song song)
     {

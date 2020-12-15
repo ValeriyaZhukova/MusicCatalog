@@ -1,5 +1,6 @@
 package kz.iitu.musiccatalog.controller;
 
+import kz.iitu.musiccatalog.model.Album;
 import kz.iitu.musiccatalog.model.Song;
 import kz.iitu.musiccatalog.model.SongList;
 import kz.iitu.musiccatalog.model.User;
@@ -29,40 +30,54 @@ public class MusicCatalogController {
     }
 
     @GetMapping("/songs/{songId}")
-    public Song getSongById(@PathVariable Long songId)
+    public ResponseEntity<Song> getSongById(@PathVariable Long songId)
     {
-        return musicInformationService.getSongByID(songId);
+        Song song = musicInformationService.getSongByID(songId);
+        return ResponseEntity.ok(song);
     }
 
-
     @GetMapping("/songs")
-    public ResponseEntity<?> getSongs()
+    public ResponseEntity<List<Song>> getSongs()
     {
-        SongList songList = musicInformationService.getSongs();
-
-        List<Song> songs = new ArrayList<>(songList.getSongList());
+        List<Song> songs = musicInformationService.getSongs();
         return ResponseEntity.ok(songs);
     }
 
     @GetMapping("/songs/album/{albumID}")
-    public ResponseEntity<?> getSongsByAlbumID(@PathVariable Long albumID)
+    public ResponseEntity<List<Song>> getSongsByAlbumID(@PathVariable Long albumID)
     {
         List<Song> songs = musicInformationService.getSongsByAlbumID(albumID);
         return ResponseEntity.ok(songs);
     }
 
-  /*  @PostMapping("/users/login")
+    @GetMapping("/albums/{albumID}")
+    public ResponseEntity<Album> getAlbumByID(@PathVariable Long albumID)
+    {
+        Album album = musicInformationService.getAlbumByID(albumID);
+        return ResponseEntity.ok(album);
+    }
+
+    @GetMapping("/albums")
+    public ResponseEntity<List<Album>> getAlbums()
+    {
+        List<Album> albums = musicInformationService.getAlbums();
+        return ResponseEntity.ok(albums);
+    }
+
+
+
+
+   /* @GetMapping("/users/{userID}")
+    public User getUserById(@PathVariable Long userID)
+    {
+        User user = userService.getUserByID(userID);
+        return user;
+    }*/
+
+     /*  @PostMapping("/users/login")
     public void login(@RequestBody User user)
     {
 
     }*/
-/*
-    @GetMapping("/user")
-    public User getUserByUsername(String username)
-    {
-        User user = userService.getUser(username);
-        return user;
-    }*/
-
 
 }

@@ -18,7 +18,7 @@ class Header extends Component
             <Menu mode={"horizontal"} style={{width: "100%"}}>
                 <Menu.Item key={1}><Link to={"/"} style={{textDecoration: "none", color: "#000"}}>Home</Link></Menu.Item>
                 <Menu.Item key={2}><Link to={"/"} style={{textDecoration: "none", color: "#000"}}>Songs</Link></Menu.Item>
-                <Menu.Item key={3}><Link to={"/"} style={{textDecoration: "none", color: "#000"}}>Albums</Link></Menu.Item>
+                <Menu.Item key={3}><Link to={"/albums"} style={{textDecoration: "none", color: "#000"}}>Albums</Link></Menu.Item>
             </Menu>
         );
 

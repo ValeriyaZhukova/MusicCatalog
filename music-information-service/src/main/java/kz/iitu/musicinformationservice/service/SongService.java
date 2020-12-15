@@ -34,6 +34,11 @@ public class SongService {
         return songRepository.findSongByAlbum_NameContaining(album_name);
     }
 
+    public List<Song> getSongsByAlbumID(Long albumID)
+    {
+        return songRepository.findSongByAlbumId(albumID);
+    }
+
     public List<Song> getSongsByArtist(String artist_name)
     {
         return songRepository.findSongByArtists_NameContaining(artist_name);

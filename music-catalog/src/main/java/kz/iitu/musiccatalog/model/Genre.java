@@ -16,6 +16,7 @@ import java.util.List;
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "albums"})
 public class Genre {
     @Id
+    @NonNull
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @NonNull
@@ -23,4 +24,5 @@ public class Genre {
 
     @OneToMany(mappedBy="genre")
     private List<Album> albums;
+
 }

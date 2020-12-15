@@ -13,5 +13,5 @@ public class Recommendation {
     private User user;
     private Song song;
     private Playlist playlist;
-    private List<Song> recommendedSongs = new ArrayList<>();
+    private List<Song> recommendedSongs;
 }
